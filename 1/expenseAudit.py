@@ -7,5 +7,10 @@ import sys
 numToSumTo = 2020
 expenses = [int(lines.strip()) for lines in open(os.path.join(sys.path[0], 'expenses.txt'), 'r')]
 
-val2 = {x*y for x in expenses for y in expenses if x!=y and x+y==numToSumTo}
-print(str(val2).strip('{}'))
+def twoValues():
+    return {x*y for x in expenses for y in expenses if x+y==numToSumTo}
+
+def threeValues():
+    return {x*y*z for x in expenses for y in expenses for z in expenses if x+y+z==numToSumTo}
+
+print(str(threeValues()).strip('{}'))
