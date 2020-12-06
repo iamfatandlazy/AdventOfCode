@@ -24,71 +24,65 @@ for field in requiredFields:
 
 
 #part 2
+#ACTUALLY handling the data and making it into a key value pair to easily use
 validPassports2 = [passport.split(' ') for passport in formattedData]
+validPassportDict = []
 for passport in validPassports2:
     del passport[0]
-
-for passport in validPassports2:
+    passportDict = {}
     for item in passport:
-        if 'byr' in item:
-            byr = item[4:len(item)-1]
-            if int(byr) < 1920 and int(byr) >2002:
-                validPassports2.remove(passport)
+        (key,val) = item.split(':')
+        passportDict[key] = val
+    validPassportDict.append(passportDict)
+    
+for passport in validPassportDict:
+    for key in passport:
+        if key=='byr':
+            if int(passport[key])<1920 or int(passport[key])>2002:
+                validPassportDict.remove(passport)
+                break
+        
+        elif key=='iyr':
+            if int(passport[key])<2010 or int(passport[key])>2020:
+                validPassportDict.remove(passport)
                 break
 
-
-        if 'iyr' in item:
-            iyr = item[4:len(item)-1]
-            if int(iyr) < 2010 and int(iyr) > 2020:
-                validPassports2.remove(passport)
+        elif key=='eyr':
+            if int(passport[key])<2020 or int(passport[key])>2030:
+                validPassportDict.remove(passport)
                 break
 
-
-        if 'eyr' in item:
-            eyr = item[4:len(item)-1]
-            if int(eyr) < 2020 and int(eyr) > 2030:
-                validPassports2.remove(passport)
-                break
-
-
-        if 'hgt' in item:
-            unit = item[len(item)-2:len(item)-1]
-            hgt = item[4:len(item)-3]
-            if unit=='cm':
-                if int(hgt)<150 and int(hgt)>193:
-                    validPassports2.remove(passport)
+        elif key=='hgt':
+            unit = passport[key][len(passport[key])-2:len(passport[key])]
+            if unit.lower()==('cm'):
+                num = int(passport[key][0:len(passport[key])-2])
+                if num<150 or num>193:
+                    validPassportDict.remove(passport)
                     break
-            elif unit=='in':
-                if int(hgt)<59 and int(hgt)>76:
-                    validPassports2.remove(passport)
+
+            elif unit.lower()==('in'):
+                num = int(passport[key][0:len(passport[key])-2])
+                if num<59 or num>76:
+                    validPassportDict.remove(passport)
                     break
         
-
-        if 'hcl' in item:
-            hex = ['0123456789abcdef']
-            hcl = item[4:len(item)-1]
-            if hcl[0]!='#':
-                validPassports2.remove(passport)
-                break
-            elif len(item[5:len(item)-1])!=6 and not item[5:len(item)-1] in hex:
-                validPassports2.remove(passport)
-                break
-
-
-        if 'ecl' in item:
-            ecl = item[4:len(item)-1]
-            if ecl not in eyeColor:
-                validPassports2.remove(passport)
+        elif key=='hcl':
+            if len(passport[key])==7 and passport[key][0]=='#':
+                for char in passport[key][1:len(passport[key])]:
+                    if char not in('0123456789abcdef'):
+                        validPassportDict.remove(passport)
+                        break
+            else:
+                validPassportDict.remove(passport)
                 break
 
-
-        if 'pid' in item:
-            pid = item[4:len(item)-1]
-            if len(pid)!=9 and item.isnumeric:
-                validPassports2.remove(passport)
-                break
 
             
-        
-print((validPassports2))
+
+
+
+
+
+#print((validPassports2))
+print(validPassportDict)
 #print(len(validPassports1))
